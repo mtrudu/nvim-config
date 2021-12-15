@@ -353,6 +353,10 @@ inoremap <silent><expr> <TAB> coc#refresh()
       \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
+imap <silent><script><expr> <C-j> copilot#Accept("\<CR>")
+let g:copilot_no_tab_map = v:true
+
+
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
@@ -489,3 +493,5 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
 """ END COCVIM TEST
+
+map <Leader>gw :cd %:p:h<cr>:!git add . && git commit -m 'WIP'<cr>
