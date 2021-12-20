@@ -68,6 +68,9 @@ Plug 'famiu/nvim-reload'
 
 call plug#end()
 
+nmap <leader>ve :edit ~/.config/nvim/init.vim<cr>
+nmap <leader>vc :edit ~/.config/nvim/coc-settings.json<cr>
+nmap <leader>vr :source ~/.config/nvim/init.vim<cr>
 " PHP debug
 "let g:vdebug_options = {'ide_key': 'nvim-xdebug'}
 let g:vdebug_options = {'break_on_open': 0}
