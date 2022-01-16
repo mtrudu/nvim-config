@@ -63,6 +63,9 @@ Plug 'OmniSharp/omnisharp-vim'
 
 Plug 'vim-vdebug/vdebug'
 
+source ~/.config/nvim/plugins/vim-test.vim
+source ~/.config/nvim/plugins/vim-projectionist.vim
+
 "Reload Configuration
 Plug 'famiu/nvim-reload'
 
