@@ -1,6 +1,5 @@
 Plug 'tpope/vim-projectionist'
 
-
 let g:projectionist_heuristics = {
     \ "bin/console": {
     \   "src/*.php": {
