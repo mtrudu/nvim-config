@@ -7,6 +7,8 @@ call plug#begin('~/.config/vim/plugged')
 
 " theme
 Plug 'sonph/onehalf', {'rtp': 'vim/'}
+Plug 'morhetz/gruvbox'
+
 "source ~/.config/nvim/plugins/theme.vim
 
 source ~/.config/nvim/plugins/vim-test.vim
@@ -46,7 +48,13 @@ call plug#end()
 " Configuration
 " ===================================
 
-colorscheme onehalfdark
+"colorscheme onehalfdark
+colorscheme gruvbox
+highlight Normal     ctermbg=NONE guibg=NONE
+highlight LineNr     ctermbg=NONE guibg=NONE
+highlight SignColumn ctermbg=NONE guibg=NONE
+"autocmd VimEnter * hi Normal ctermbg=NONE guibg=NONE
+"autocmd vimenter * ++nested colorscheme gruvbox
 set completeopt=noinsert,menuone,noselect
 
 if (has("termguicolors"))
