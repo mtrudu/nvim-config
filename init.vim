@@ -37,6 +37,7 @@ source ~/.config/nvim/plugins/coc.vim
 source ~/.config/nvim/plugins/omnisharp.vim
 source ~/.config/nvim/plugins/copilot.vim
 "source ~/.config/nvim/plugins/vdebug.vim
+"source ~/.config/nvim/plugins/dap.vim
 source ~/.config/nvim/plugins/vim-surround.vim
 "Reload Configuration
 source ~/.config/nvim/plugins/nvim-reload.vim

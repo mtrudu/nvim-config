@@ -18,6 +18,7 @@ nmap <leader>or <Plug>(coc-references)
         "\ 'initialization_options': {'storagePath': '/tmp/intelephense'},
         "\ 'workspace_config': {
         "\   'intelephense': {
+        "\     'environment': {"phpVersion": "8.1"},
         "\     'files': {
         "\       'maxSize': 1000000,
         "\       'associations': ['*.php', '*.phtml'],
@@ -63,9 +64,8 @@ set termguicolors
 
 " Make <CR> auto-select the first completion item and notify coc.nvim to
 " format on enter, <cr> could be remapped by other vim plugin
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+    \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
  "Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
