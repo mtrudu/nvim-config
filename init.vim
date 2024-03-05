@@ -1,4 +1,4 @@
-let mapleader = ","
+let mapleader = " "
 
 syntax on      " syntax highlighing
 filetype off   " required
@@ -36,6 +36,7 @@ source ~/.config/nvim/plugins/vim-devicons.vim
 source ~/.config/nvim/plugins/coc.vim
 source ~/.config/nvim/plugins/omnisharp.vim
 source ~/.config/nvim/plugins/copilot.vim
+"source ~/.config/nvim/plugins/vim-prettier.vim
 "source ~/.config/nvim/plugins/vdebug.vim
 "source ~/.config/nvim/plugins/dap.vim
 source ~/.config/nvim/plugins/vim-surround.vim
@@ -118,6 +119,7 @@ set hidden
 set listchars=tab:>.,trail:.,extends:#,nbsp:.
 set list
 
+"set maxmempattern=100000
 
 " In many terminal emulators the mouse works just fine, thus enable it.
 if has('mouse')
@@ -130,11 +132,15 @@ endif
 
 autocmd FileType php setlocal omnifunc=phpactor#Complete
 
+" Before writting to php remove trailing whitespace and tab at end of lines
 autocmd BufWritePre *.php silent! %s/[\r \t]\+$//
+" Before writting to php convert all tabs to spaces and set the buffer expandtable to true
 autocmd BufWritePre *.php :set et|retab
+" Set filetypes
 autocmd BufNewFile,BufRead *.twig set filetype=twig
 autocmd BufNewFile,BufRead *.less set filetype=less
 autocmd BufNewFile,BufRead *.html.twig set filetype=html.twig
+" Open NERDTRee
 autocmd vimenter * if !argc() || argv() == ['.'] | NERDTree | endif
 " open nerdtree when open vim.  autocmd CompleteDone * pclose "
 "" ===================================
@@ -155,12 +161,14 @@ autocmd FileType php vnoremap <leader>d :call PhpDocRange()<CR>
 let g:php_cs_fixer_path = "~/bin/php-cs-fixer"
 let g:php_cs_fixer_rules = "@Symfony,-@PSR1,@PSR2"
 
-let g:ale_linters = {'php': ['php', 'hack', 'langserver', 'phpmd', 'phpstan']}
+let g:ale_linters = {'php': ['php', 'hack', 'langserver', 'phpmd', 'phpstan'], 'javascript': ['eslint'], 'typescript': ['eslint', 'tsserver', 'prettier']}
 let g:ale_fix_on_save = 1
 let g:ale_fixers = {
 \   'php': ['trim_whitespace', 'php_cs_fixer'],
 \   'yaml': ['trim_whitespace'],
-\   'markdown': ['trim_whitespace']
+\   'markdown': ['trim_whitespace'],
+\   'javascript': ['eslint'],
+\   'typescript': ['eslint', 'prettier']
 \}
    "'javascript': ['trim_whitespace', 'prettier'],
 
@@ -192,7 +200,6 @@ map <C-c> <leader>c<space><cr>
 nmap <Leader>t :Tagbar<CR>
 map <leader>y :NERDTreeToggle<CR>
 map <leader>ff :NERDTreeFind<CR>
-nmap <leader>gbl :Git blame<CR>
 map <leader>e :set expandtab<CR>
 
 " decode/encode base64 in a yaml
