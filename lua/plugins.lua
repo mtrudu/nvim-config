@@ -52,6 +52,7 @@ return packer.startup(function(use)
         use {'corntrace/bufexplorer'}
         use {'preservim/nerdtree'}
         use {'preservim/nerdcommenter'}
+        use {'w0rp/ale'}
         
         use { 'junegunn/fzf', 
             dir = '~/.fzf', -- Specify custom install directory for fzf if necessary

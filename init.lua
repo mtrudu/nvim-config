@@ -72,8 +72,11 @@ map('n', '<leader>y', ':NERDTreeToggle<CR>', opts)
 map('n', '<leader>ff', ':NERDTreeFind<CR>', opts)
 map('n', '<leader>e', ':set expandtab<CR>', opts)
 map('n', '<leader>u', ':r !uuidgen<CR>', opts)
-map('n', '<C-P>', ':FZF -x<CR>', opts)
 map('n', '<Leader>gw', ':cd %:p:h<CR>:!git add . && git commit -m "WIP"<CR>', opts)
+
+vim.fn.setenv("FZF_DEFAULT_COMMAND", "rg --files --no-ignore-vcs --hidden")
+map('n', '<C-P>', ':FZF -x<CR>', opts)
+
 
 -- Disable arrow keys in insert and normal mode
 local no_arrow = '<nop>'

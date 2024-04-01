@@ -74,6 +74,11 @@ end
 time([[try_loadstring definition]], false)
 time([[Defining packer_plugins]], true)
 _G.packer_plugins = {
+  ale = {
+    loaded = true,
+    path = "/Users/michael.trudu/.local/share/nvim/site/pack/packer/start/ale",
+    url = "https://github.com/w0rp/ale"
+  },
   bufexplorer = {
     loaded = true,
     path = "/Users/michael.trudu/.local/share/nvim/site/pack/packer/start/bufexplorer",
