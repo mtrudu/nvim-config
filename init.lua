@@ -14,18 +14,18 @@ vim.o.completeopt = 'noinsert,menuone,noselect'
 vim.o.termguicolors = true
 vim.cmd 'filetype plugin indent on'
 vim.wo.number = true
-vim.wo.relativenumber = true
-vim.o.pastetoggle = '<leader>p'
+-- vim.wo.relativenumber = true
+-- vim.o.pastetoggle = '<leader>p'
 vim.o.hidden = true
-vim.o.nobackup = true
-vim.o.nowritebackup = true
+-- vim.o.nobackup = true
+-- vim.o.nowritebackup = true
 vim.o.cmdheight = 2
 vim.o.updatetime = 400
 vim.o.shortmess = vim.o.shortmess .. 'c'
-vim.o.nocursorline = true
+-- vim.o.nocursorline = true
 vim.o.encoding = 'utf-8'
 vim.o.clipboard = 'unnamedplus'
-vim.o.nocompatible = true
+-- vim.o.nocompatible = true
 vim.o.laststatus = 3
 vim.o.swapfile = false
 vim.o.backspace = 'indent,eol,start'
@@ -90,21 +90,32 @@ map('n', '<Left>', no_arrow, opts)
 map('n', '<Right>', no_arrow, opts)
 
 -- Custom PHP configuration
-vim.g.php_cs_fixer_path = '~/bin/php-cs-fixer'
+--vim.g.php_cs_fixer_path = 'PHP_CS_FIXER_IGNORE_ENV=1 ~/bin/php-cs-fixer'
 vim.g.php_cs_fixer_rules = '@Symfony,-@PSR1,@PSR2'
 vim.g.ale_linters = {
-    php = {'php', 'hack', 'langserver', 'phpmd', 'phpstan'},
-    javascript = {'eslint'},
-    typescript = {'eslint', 'tsserver', 'prettier'}
+    php = {'php', 'phpmd', 'phpstan'},
+    javascript = {'eslint', 'prettier'},
+    typescript = {'eslint', 'prettier'},
+    javascriptreact = {'eslint', 'prettier'},
+    typescriptreact = {'eslint', 'prettier'},
 }
-vim.g.ale_fix_on_save = 1
+
 vim.g.ale_fixers = {
-    php = {'trim_whitespace', 'php_cs_fixer'},
+    --php = {'trim_whitespace', 'php_cs_fixer'},
     yaml = {'trim_whitespace'},
     markdown = {'trim_whitespace'},
-    javascript = {'eslint'},
-    typescript = {'eslint', 'prettier'}
+    javascript = {'eslint', 'prettier'},
+    typescript = {'eslint', 'prettier'},
+    javascriptreact = {'eslint', 'prettier'},
+    typescriptreact = {'eslint', 'prettier'},
 }
+
+vim.g.ale_fix_on_save = 1
+
+--vim.g.ale_php_cs_fixer_executable = 'echo "douda"'
+--vim.g.ale_php_cs_fixer_executable = 'tools/php-cs-fixer-wrapper.sh'
+--vim.g.ale_php_phpmd_executable = '/Users/michael.trudu/.composer/vendor/bin/phpmd'
+
 vim.g.php_namespace_sort_after_insert = 1
 
 
@@ -183,10 +194,12 @@ vim.g.webdevicons_enable_ctrlp = 1
 vim.g.webdevicons_enable = 1
 
 -- Custom extension symbols
-vim.g.WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {
-    js = '',
-    ts = '',
-}
+-- vim.g.WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {
+--     js = '',
+--     ts = '',
+-- }
+
+
 
 -- Split and open definition vertically or horizontally
 map('n', '<leader>ov', ':vsp<CR>:lua vim.fn.CocAction("jumpDefinition", "vsplit")<CR>', { silent = true, noremap = true })
@@ -314,3 +327,135 @@ function _G.check_back_space()
     end
 end
 
+-- Require dap and telescope
+local dap = require('dap')
+require('telescope').load_extension('dap')
+
+print("DAP for PHP configured successfully")
+
+local has_dap, dap = pcall(require, "dap")
+if not has_dap then
+  return
+end
+
+local has_dap_ui, dapui = pcall(require, "dapui")
+if not has_dap_ui then
+  return
+end
+
+-- Configure the PHP adapter
+dap.adapters.php = {
+    type = 'executable',
+    command = 'node',
+    args = { '/Users/michael.trudu/Projects/vscode-php-debug/out/phpDebug.js' }
+}
+
+dap.configurations.php = {
+  -- to run php right from the editor
+  {
+    name = "run current script",
+    type = "php",
+    request = "launch",
+    port = 9003,
+    cwd = "${fileDirname}",
+    program = "${file}",
+    runtimeExecutable = "php"
+  },
+  -- to listen to any php call
+  {
+    name = "listen for Xdebug local",
+    type = "php",
+    request = "launch",
+    port = 9003,
+  },
+  -- to listen to php call in docker container
+  {
+    name = "listen for Xdebug docker",
+    type = "php",
+    request = "launch",
+    port = 9003,
+    -- this is where your file is in the container
+    pathMappings = {
+      ["/opt/project"] = "${workspaceFolder}"
+    }
+  }
+}
+
+-- toggle the UI elements after certain events
+dap.listeners.after.event_initialized["dapui_config"] = function()
+  dapui.open()
+end
+
+dap.listeners.before.event_terminated["dapui_config"] = function()
+  dapui.close()
+end
+
+dap.listeners.before.event_exited["dapui_config"] = function()
+  dapui.close()
+end
+
+dapui.setup()
+
+local function map(mode, lhs, rhs, opts)
+  local options = { noremap = true, silent = true }
+  if opts then
+    options = vim.tbl_extend('force', options, opts)
+  end
+  vim.keymap.set(mode, lhs, rhs, options)
+end
+
+map("n", "<F5>", require "dap".continue, {})
+map("n", "<F6>", require "dap".step_over, {})
+map("n", "<F7>", require "dap".step_into, {})
+map("n", "<F8>", require "dap".step_out, {})
+map("n", "<leader>b", require "dap".toggle_breakpoint, {})
+map("n", "<leader>du", ":lua require'dapui'.toggle()<cr>", {})
+
+-- you'll want this because we don't want xdebug to start automatically everytime
+function insert_xdebug()
+  local pos = vim.api.nvim_win_get_cursor(0)[2]
+  local line = vim.api.nvim_get_current_line()
+  local nline = line:sub(0, pos) .. 'xdebug_break();' .. line:sub(pos + 1)
+  vim.api.nvim_set_current_line(nline)
+end
+
+map("n", "<leader>ds", "<cmd>lua insert_xdebug()<cr>")
+vim.api.nvim_create_autocmd("BufWritePost", {
+  pattern = "*.php",
+  callback = function()
+    local file = vim.fn.expand("%:p")
+    local cwd = vim.fn.getcwd()
+    
+    -- Check for project-specific php-cs-fixer
+    local project_fixer = cwd .. "/vendor/bin/php-cs-fixer"
+    local wrapper_path = cwd .. "/tools/php-cs-fixer-wrapper.sh"
+    local command
+    
+    if vim.fn.filereadable(wrapper_path) == 1 then
+      command = { wrapper_path, file }
+    elseif vim.fn.filereadable(project_fixer) == 1 then
+      -- Use project's php-cs-fixer with its config
+      command = { project_fixer, "fix", file }
+    else
+      -- Fallback to global php-cs-fixer
+      command = { "php-cs-fixer", "fix", file, "--rules=" .. vim.g.php_cs_fixer_rules }
+    end
+    
+    local stderr_lines = {}
+    
+    vim.fn.jobstart(command, {
+      cwd = cwd,
+      env = { PHP_CS_FIXER_IGNORE_ENV = "1" },
+      stdout_buffered = true,
+      stderr_buffered = true,
+      on_exit = function(_, code)
+        if code == 0 then
+          local cursor_pos = vim.api.nvim_win_get_cursor(0)
+          local view = vim.fn.winsaveview()
+          vim.cmd("edit!")  -- recharge le buffer pour voir les changements
+          vim.fn.winrestview(view)
+        end
+      end,
+    })
+  end,
+})

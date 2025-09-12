@@ -69,11 +69,28 @@ return packer.startup(function(use)
         use {'ryanoasis/vim-devicons'}
 
         use {'neoclide/coc.nvim', branch = 'release'}
-        -- use 'OmniSharp/omnisharp-vim'
-        -- use {'github/copilot.vim'}
         use { "zbirenbaum/copilot.lua" }
+
+        use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap", "nvim-neotest/nvim-nio"} }
+        use {
+            "mfussenegger/nvim-dap",
+        }
+        use {
+            "theHamsta/nvim-dap-virtual-text",
+            requires = {
+            "mfussenegger/nvim-dap"
+            },
+        }
+        use {
+            'nvim-telescope/telescope.nvim', tag = '0.1.8',
+            -- or                            , branch = '0.1.x',
+            requires = { {'nvim-lua/plenary.nvim'} }
+        }
+
+  use 'nvim-telescope/telescope-dap.nvim'
 
 	if PACKER_BOOTSTRAP then
 		require("packer").sync()
 	end
+
 end)

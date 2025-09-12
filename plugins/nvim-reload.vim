@@ -1,1 +1,0 @@
-Plug 'famiu/nvim-reload'
